@@ -14,8 +14,6 @@ import (
   "fmt"
 )
 
-const maxConcurrency = 16
-
 func emptyDir (pth string) {
   // Empty a directory without deleting it.
   // G B&S freaks out if you actually delete it.
@@ -40,7 +38,7 @@ func emptyDir (pth string) {
   }
 }
 
-func link (cfg config) {
+func link (cfg config, maxConcurrency int) {
   // Create the dest folder if not exists
   var err = os.MkdirAll(cfg.toDir, 0775)
   if err != nil {
