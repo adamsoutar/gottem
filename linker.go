@@ -16,20 +16,45 @@ import (
 
 const maxConcurrency = 16
 
-func link (cfg config) {
-  // Delete the existing destination directory
-  var err = os.RemoveAll(cfg.toDir)
+func emptyDir (pth string) {
+  // Empty a directory without deleting it.
+  // G B&S freaks out if you actually delete it.
+  var dI, err = ioutil.ReadDir(pth)
   if err != nil {
     panic(err)
   }
-  var mErr = os.Mkdir(cfg.toDir, 0775)
-  if mErr != nil {
-    panic(mErr)
+
+  for _, f := range dI {
+    var thisPth = path.Join(pth, f.Name())
+    var fErr error
+
+    if f.IsDir() {
+      fErr = os.RemoveAll(thisPth)
+    } else {
+      fErr = os.Remove(thisPth)
+    }
+
+    if fErr != nil {
+      panic(fErr)
+    }
   }
+}
+
+func link (cfg config) {
+  // Create the dest folder if not exists
+  var err = os.MkdirAll(cfg.toDir, 0775)
+  if err != nil {
+    panic(err)
+  }
+
+  // Delete the contents of the destination directory
+  fmt.Println("Emptying the destination directory...")
+  emptyDir(cfg.toDir)
 
   var wg sync.WaitGroup
   var sem = make(chan int, maxConcurrency)
 
+  fmt.Println("Walking the source dir and linking files...")
   wg.Add(1)
   go processDir(cfg.fromDir, "", sem, &wg, cfg)
 
