@@ -41,16 +41,16 @@ I have mine hooked up on a cronjob every hour.
 ## Speed/Technical stuff
 
 For my over half a million project files (518,474), running gottem with the above
-config takes 105 seconds on a 3.6GHz CPU with 16 threads.
+config takes 67 seconds on a 3.6GHz CPU with 16 threads.
 
 ```
 $ time go run gottem
 Gottem is linking /Users/adam/Documents/Mac Projects to /Users/adam/Backup...
 Done, enjoy your backup!
-go run gottem  3.02s user 105.42s system 368% cpu 29.414 total
+go run gottem  2.92s user 67.09s system 363% cpu 19.253 total
 ```
 
-It's fast because it uses goroutines to take advantage of all your CPU's threads.
+It uses goroutines to take advantage of all your CPU's threads.
 
 **NOTE:** You can pass a command line argument to limit the number of goroutines
 (it defaults to 16) eg. `./gottem 8`

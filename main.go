@@ -2,8 +2,8 @@ package main
 
 import (
   "fmt"
-  "os"
   "strconv"
+  "os"
 )
 
 func main () {
